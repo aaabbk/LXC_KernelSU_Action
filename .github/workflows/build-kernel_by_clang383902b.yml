@@ -3,7 +3,7 @@ on:
   watch:
     types: [started]
 
-  workflow_dispatch:
+  workflow_dispatch:{}
 
 jobs:
   build:
@@ -18,7 +18,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     with:
-        submodules: 'recursive'  # 添加这一行以递归拉取子模块
+        submodules: 'recursive'  # 添加这一行以递归拉取子模块=
     - name: Prepare Configuration
       run: |
         CONFIG_ENV=$(cat config.env | grep -w "CONFIG_ENV" | head -n 1 | cut -d "=" -f 2)
