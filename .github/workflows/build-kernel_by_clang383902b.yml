@@ -17,7 +17,7 @@ jobs:
       CI: "false"
     steps:
     - uses: actions/checkout@v4
-    with:
+      with:
         submodules: 'recursive'  # 添加这一行以递归拉取子模块=
     - name: Prepare Configuration
       run: |
