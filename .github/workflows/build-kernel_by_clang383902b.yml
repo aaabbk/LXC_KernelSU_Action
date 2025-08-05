@@ -17,8 +17,6 @@ jobs:
       CI: "false"
     steps:
     - uses: actions/checkout@v4
-      with:
-        submodules: 'recursive'  # 添加这一行以递归拉取子模块=
     - name: Prepare Configuration
       run: |
         CONFIG_ENV=$(cat config.env | grep -w "CONFIG_ENV" | head -n 1 | cut -d "=" -f 2)
@@ -93,9 +91,6 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE/kernel_workspace
         git clone ${{ env.KERNEL_SOURCE }} -b ${{ env.KERNEL_SOURCE_BRANCH }} android-kernel --depth=1
-        cd $GITHUB_WORKSPACE/kernel_workspace/android-kernel
-        git submodule sync
-        git submodule update --init --recursive
 
     - name: Download source boot image
       if: env.BUILD_BOOT_IMG == 'true'
