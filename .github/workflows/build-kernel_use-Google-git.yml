@@ -135,37 +135,37 @@ jobs:
     - name: Fix KernelSU file permissions
       if: env.ENABLE_KERNELSU == 'true'
       run: |
-      cd $GITHUB_WORKSPACE/kernel_workspace/android-kernel
+        cd $GITHUB_WORKSPACE/kernel_workspace/android-kernel
     
-      echo "Checking KernelSU directory permissions..."
-      ls -la drivers/ | grep kernelsu || echo "No kernelsu directory found"
+        echo "Checking KernelSU directory permissions..."
+        ls -la drivers/ | grep kernelsu || echo "No kernelsu directory found"
     
-      if [ -d "drivers/kernelsu" ]; then
+        if [ -d "drivers/kernelsu" ]; then
         echo "Fixing kernelsu directory permissions..."
         sudo chmod -R 755 drivers/kernelsu
         sudo chown -R runner:runner drivers/kernelsu
-        
+      
         echo "Directory permissions after fix:"
         ls -la drivers/kernelsu/
-        
+      
         if [ -f "drivers/kernelsu/Kconfig" ]; then
-            echo "Fixing Kconfig file permissions..."
-            sudo chmod 644 drivers/kernelsu/Kconfig
-            sudo chown runner:runner drivers/kernelsu/Kconfig
-            
-            echo "Kconfig file permissions:"
-            ls -la drivers/kernelsu/Kconfig
-            echo "Kconfig file content (first few lines):"
-            head -n 5 drivers/kernelsu/Kconfig
+        echo "Fixing Kconfig file permissions..."
+        sudo chmod 644 drivers/kernelsu/Kconfig
+        sudo chown runner:runner drivers/kernelsu/Kconfig
+        
+        echo "Kconfig file permissions:"
+        ls -la drivers/kernelsu/Kconfig
+        echo "Kconfig file content (first few lines):"
+        head -n 5 drivers/kernelsu/Kconfig
         else
-            echo "ERROR: Kconfig file not found in drivers/kernelsu/"
-            find . -name "Kconfig" | grep -i kernelsu || echo "No KernelSU Kconfig found"
+        echo "ERROR: Kconfig file not found in drivers/kernelsu/"
+        find . -name "Kconfig" | grep -i kernelsu || echo "No KernelSU Kconfig found"
         fi
-    else
+        else
         echo "ERROR: drivers/kernelsu directory not found"
         echo "Searching for kernelsu directories..."
         find . -name "*kernelsu*" -type d
-    fi        
+        fi
 
     - name: Setup LXC
       if: env.ENABLE_LXC == 'true'
