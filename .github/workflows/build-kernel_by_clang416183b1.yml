@@ -103,12 +103,47 @@ jobs:
             echo "HAVE_SOURCE_BOOT_IMAGE=true" >> $GITHUB_ENV
         fi
   
-    - name: Setup KernelSU
+    - name: Setup SukiSU-Ultra
       if: env.ENABLE_KERNELSU == 'true'
       run: |
         cd $GITHUB_WORKSPACE/kernel_workspace/android-kernel
-        curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s ${{ env.KERNELSU_TAG }}
+        curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s main
         echo "UPLOADNAME=-KernelSU" >> $GITHUB_ENV
+
+    - name: Fix KernelSU file permissions
+      if: env.ENABLE_KERNELSU == 'true'
+      run: |
+        cd $GITHUB_WORKSPACE/kernel_workspace/android-kernel
+    
+        echo "Checking KernelSU directory permissions..."
+        ls -la drivers/ | grep kernelsu || echo "No kernelsu directory found"
+    
+        if [ -d "drivers/kernelsu" ]; then
+        echo "Fixing kernelsu directory permissions..."
+        sudo chmod -R 755 drivers/kernelsu
+        sudo chown -R runner:runner drivers/kernelsu
+      
+        echo "Directory permissions after fix:"
+        ls -la drivers/kernelsu/
+      
+        if [ -f "drivers/kernelsu/Kconfig" ]; then
+        echo "Fixing Kconfig file permissions..."
+        sudo chmod 644 drivers/kernelsu/Kconfig
+        sudo chown runner:runner drivers/kernelsu/Kconfig
+        
+        echo "Kconfig file permissions:"
+        ls -la drivers/kernelsu/Kconfig
+        echo "Kconfig file content (first few lines):"
+        head -n 5 drivers/kernelsu/Kconfig
+        else
+        echo "ERROR: Kconfig file not found in drivers/kernelsu/"
+        find . -name "Kconfig" | grep -i kernelsu || echo "No KernelSU Kconfig found"
+        fi
+        else
+        echo "ERROR: drivers/kernelsu directory not found"
+        echo "Searching for kernelsu directories..."
+        find . -name "*kernelsu*" -type d
+        fi
 
     - name: Setup Configuration for Kernel
       run: |
