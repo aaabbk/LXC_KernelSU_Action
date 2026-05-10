@@ -58,10 +58,10 @@ jobs:
         echo "DISABLE_FST=$(cat $CONFIG_ENV | grep -w "DISABLE_FST" | head -n 1 | cut -d "=" -f 2)" >> $GITHUB_ENV
         echo "ENABLE_NETHUNTER=$(cat $CONFIG_ENV | grep -w "ENABLE_NETHUNTER" | head -n 1 | cut -d "=" -f 2)" >> $GITHUB_ENV
         
-    - name: Set swap to 10G
+    - name: Set swap to 9G
       uses: pierotofy/set-swap-space@master
       with:
-        swap-size-gb: 10
+        swap-size-gb: 9
 
     - name: Setup build kernel environment
       run: |
